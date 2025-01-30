@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", function () {
     const divs = document.querySelectorAll(".image");
     let draggedElement = null;
@@ -15,11 +16,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
         div.addEventListener("dragover", function (event) {
             event.preventDefault();
-            const dragging = document.querySelector(".drag");
+        });
+
+        div.addEventListener("drop", function (event) {
+            event.preventDefault();
+            const drag = document.querySelector(".drag");
             const parent = this.parentNode;
-            const siblings = [...parent.children].filter(child => child !== dragging);
+            const siblings = [...parent.children].filter(child => child !== drag);
             let nextSibling = siblings.find(sibling => event.clientX < sibling.getBoundingClientRect().left + sibling.offsetWidth / 2);
-            parent.insertBefore(dragging, nextSibling);
+            parent.insertBefore(drag, nextSibling);
+            
         });
     });
 });
