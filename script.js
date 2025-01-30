@@ -6,27 +6,20 @@ document.addEventListener("DOMContentLoaded", function () {
         div.addEventListener("dragstart", function (event) {
             draggedElement = this;
             event.dataTransfer.setData("text/plain", this.id);
-            setTimeout(() => this.style.opacity = "0.5", 0);
+            setTimeout(() => this.classList.add("dragging"), 0);
         });
 
         div.addEventListener("dragend", function () {
-            this.style.opacity = "1";
+            this.classList.remove("dragging");
         });
 
         div.addEventListener("dragover", function (event) {
             event.preventDefault();
-        });
-
-        div.addEventListener("drop", function (event) {
-            event.preventDefault();
-            let droppedElementId = event.dataTransfer.getData("text/plain");
-            let droppedElement = document.getElementById(droppedElementId);
-            
-            if (draggedElement && draggedElement !== this) {
-                let temp = this.innerHTML;
-                this.innerHTML = droppedElement.innerHTML;
-                droppedElement.innerHTML = temp;
-            }
+            const dragging = document.querySelector(".dragging");
+            const parent = this.parentNode;
+            const siblings = [...parent.children].filter(child => child !== dragging);
+            let nextSibling = siblings.find(sibling => event.clientX < sibling.getBoundingClientRect().left + sibling.offsetWidth / 2);
+            parent.insertBefore(dragging, nextSibling);
         });
     });
 });
